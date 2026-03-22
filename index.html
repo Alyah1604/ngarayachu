@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ngara Yachu — Mfumo wa Msaada</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --primary:#1A3A5C;--primary-light:#2557A7;--primary-dark:#0F2238;
+  --gold:#C9A84C;--gold-light:#FBF5E6;
+  --green:#1B5E20;--green-light:#E8F5E9;
+  --red:#B71C1C;--red-light:#FFEBEE;
+  --amber:#E65100;--amber-light:#FFF3E0;
+  --blue:#1565C0;--blue-light:#E3F2FD;
+  --bg:#F4F6F9;--panel:#FFFFFF;--text:#1A1A1A;--muted:#6B6B6B;
+  --border:#E0E4EA;--radius:12px;--shadow:0 2px 12px rgba(0,0,0,0.07);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;}
+.screen.active{display:block;}
+
+/* WELCOME */
+.welcome{min-height:100vh;background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 60%,var(--primary-light) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;}
+.welcome-logo{width:86px;height:86px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 20px;box-shadow:0 8px 24px rgba(0,0,0,0.3);}
+.welcome-title{font-size:26px;font-weight:700;color:white;margin-bottom:6px;}
+.welcome-sub{font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:10px;line-height:1.6;}
+.welcome-rule{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:14px 20px;margin:16px 0 32px;max-width:340px;text-align:left;}
+.welcome-rule p{font-size:12px;color:rgba(255,255,255,0.8);line-height:2;}
+.welcome-rule strong{color:var(--gold);}
+.welcome-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;}
+.w-btn{padding:14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;}
+.w-btn-gold{background:var(--gold);color:var(--primary-dark);}
+.w-btn-outline{background:rgba(255,255,255,0.1);color:white;border:1.5px solid rgba(255,255,255,0.3);}
+.w-btn-admin{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.15);font-size:12px;padding:10px;}
+
+/* TOPBAR */
+.topbar{background:var(--primary);color:white;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
+.topbar-title{font-size:15px;font-weight:700;}
+.topbar-sub{font-size:11px;opacity:0.7;margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.logout-btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:white;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;}
+
+/* PAGE WRAP */
+.page-wrap{padding:16px;max-width:520px;margin:0 auto;padding-bottom:80px;}
+.admin-wrap{padding:16px;max-width:900px;margin:0 auto;padding-bottom:80px;}
+
+/* CARDS */
+.card{background:var(--panel);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px;border:1px solid var(--border);}
+.card-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+
+/* STAT GRID */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.stat-card{background:var(--panel);border-radius:var(--radius);padding:14px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow);}
+.stat-num{font-size:22px;font-weight:700;color:var(--primary);}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:3px;font-weight:500;}
+
+/* ACCOUNT HERO */
+.account-hero{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);border-radius:var(--radius);padding:22px 20px;color:white;margin-bottom:14px;}
+.account-hero-name{font-size:16px;font-weight:700;margin-bottom:4px;}
+.account-hero-phone{font-size:12px;opacity:0.75;margin-bottom:16px;}
+.account-hero-balance{font-size:32px;font-weight:700;margin-bottom:4px;}
+.account-hero-lbl{font-size:12px;opacity:0.75;}
+.account-status{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;}
+.status-active{background:rgba(76,175,80,0.2);color:#A5D6A7;border:1px solid rgba(76,175,80,0.3);}
+.status-inactive{background:rgba(255,107,107,0.2);color:#FFCDD2;border:1px solid rgba(255,107,107,0.3);}
+
+/* FORMS */
+.form-group{margin-bottom:12px;}
+.form-group label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;letter-spacing:0.3px;text-transform:uppercase;}
+.form-input{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;background:white;color:var(--text);outline:none;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--primary);}
+.form-select{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;background:white;color:var(--text);outline:none;cursor:pointer;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.field-err{font-size:11px;color:var(--red);margin-top:3px;display:none;}
+.field-err.show{display:block;}
+
+/* BUTTONS */
+.btn{width:100%;padding:13px;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:var(--primary);color:white;}
+.btn-primary:hover{background:var(--primary-light);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-gold{background:var(--gold);color:var(--primary-dark);}
+.btn-outline{background:white;color:var(--primary);border:1.5px solid var(--primary);}
+.btn-red{background:var(--red);color:white;}
+.btn-green{background:var(--green);color:white;}
+.btn-sm{width:auto;padding:6px 14px;font-size:11px;border-radius:6px;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge-pending{background:#FFF8E1;color:#F57F17;}
+.badge-approved{background:var(--green-light);color:var(--green);}
+.badge-rejected{background:var(--red-light);color:var(--red);}
+.badge-active{background:var(--green-light);color:var(--green);}
+.badge-inactive{background:var(--red-light);color:var(--red);}
+
+/* ALERTS */
+.alert{padding:12px 14px;border-radius:8px;margin-bottom:12px;font-size:13px;line-height:1.5;}
+.alert-success{background:var(--green-light);color:var(--green);border:1px solid #A5D6A7;}
+.alert-error{background:var(--red-light);color:var(--red);border:1px solid #FFCDD2;}
+.alert-info{background:var(--blue-light);color:var(--blue);border:1px solid #BBDEFB;}
+.alert-warning{background:var(--amber-light);color:var(--amber);border:1px solid #FFCC80;}
+.alert-id{display:none;}
+.alert-id.show{display:block;}
+
+/* TABS */
+.tabs{display:flex;background:var(--panel);border-radius:10px;padding:4px;margin-bottom:14px;box-shadow:var(--shadow);overflow-x:auto;}
+.tab{flex:1;padding:9px 8px;text-align:center;border-radius:8px;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);transition:all 0.2s;white-space:nowrap;}
+.tab.active{background:var(--primary);color:white;}
+
+/* TEGEMEZI LIST */
+.tegemezi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.teg-item{background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:12px;position:relative;}
+.teg-item.filled{border-color:#A5D6A7;background:var(--green-light);}
+.teg-item.empty{border-style:dashed;}
+.teg-role{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
+.teg-name{font-size:13px;font-weight:600;color:var(--text);}
+.teg-empty{font-size:12px;color:var(--muted);font-style:italic;}
+
+/* MEMBER ROWS */
+.member-row{display:flex;align-items:center;gap:12px;padding:12px;background:var(--panel);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);box-shadow:var(--shadow);}
+.member-avatar{width:40px;height:40px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;}
+.member-info{flex:1;}
+.member-name{font-weight:600;font-size:13px;}
+.member-phone{font-size:11px;color:var(--muted);margin-top:2px;}
+.member-actions{display:flex;gap:6px;flex-wrap:wrap;}
+
+/* DAI CARD */
+.dai-card{background:var(--panel);border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:10px;box-shadow:var(--shadow);}
+.dai-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.dai-title{font-weight:600;font-size:14px;}
+.dai-sub{font-size:12px;color:var(--muted);margin-top:3px;}
+.dai-details{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.dai-detail-item{background:var(--bg);border-radius:6px;padding:8px 10px;}
+.dai-detail-lbl{font-size:10px;color:var(--muted);font-weight:500;}
+.dai-detail-val{font-size:13px;font-weight:600;margin-top:2px;}
+
+/* PENALTY BANNER */
+.penalty-banner{background:var(--red-light);border:1px solid #FFCDD2;border-radius:8px;padding:12px 14px;margin-bottom:10px;}
+.penalty-banner strong{color:var(--red);display:block;margin-bottom:4px;}
+.penalty-banner span{font-size:12px;color:var(--red);}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--border);display:flex;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,0.07);}
+.nav-item{flex:1;padding:9px 4px 7px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;}
+.nav-item.active{color:var(--primary);}
+.nav-item:not(.active){color:var(--muted);}
+.nav-icon{font-size:20px;}
+.nav-lbl{font-size:10px;font-weight:600;}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:flex-end;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal-box{background:white;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto;}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;min-width:400px;}
+th{text-align:left;padding:9px 12px;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;background:#FAFAFA;border-bottom:1px solid var(--border);}
+td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+
+/* TOAST */
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(100px);background:#323232;color:white;padding:11px 22px;border-radius:24px;font-size:13px;z-index:9999;transition:transform 0.4s;box-shadow:0 4px 12px rgba(0,0,0,0.3);white-space:nowrap;max-width:90vw;text-align:center;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* WA BTN */
+.wa-btn{width:100%;background:#25D366;color:white;border:none;padding:13px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;}
+.wa-btn svg{width:18px;height:18px;fill:white;}
+
+@media(max-width:400px){.tegemezi-grid{grid-template-columns:1fr;}.form-grid{grid-template-columns:1fr;}.stat-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div class="screen active" id="screen-welcome">
+  <div class="welcome">
+    <div class="welcome-logo">🤝</div>
+    <h1 class="welcome-title">Ngara Yachu</h1>
+    <p class="welcome-sub">Mfumo wa Kusaidiana Nyakati za Msiba</p>
+    <div class="welcome-rule">
+      <p>💰 <strong>Kiasi cha Msaada:</strong> TZS 2,000,000/=</p>
+      <p>📋 <strong>Michango:</strong> TZS 30,000/= kwa kila mwanachama</p>
+      <p>⚠ <strong>Faini:</strong> TZS 15,000/= (baada ya siku 7)</p>
+      <p>👨‍👩‍👧‍👦 <strong>Tegemezi:</strong> Wazazi, mke/mume, watoto 4</p>
+    </div>
+    <div class="welcome-btns">
+      <button class="w-btn w-btn-gold" onclick="showScreen('screen-login')">🔑 Ingia</button>
+      <button class="w-btn w-btn-outline" onclick="showScreen('screen-register')">📝 Jiandikishe</button>
+      <button class="w-btn w-btn-admin" onclick="showScreen('screen-admin-login')">⚙ Msimamizi</button>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="screen" id="screen-register">
+  <div style="background:var(--primary);padding:14px 18px;display:flex;align-items:center;gap:10px;">
+    <button onclick="showScreen('screen-welcome')" style="background:none;border:none;color:white;font-size:22px;cursor:pointer;">←</button>
+    <div><p style="color:white;font-weight:700;font-size:15px;">Jiandikishe</p><p style="color:rgba(255,255,255,0.7);font-size:11px;">Omba kujiunga na kikundi</p></div>
+  </div>
+  <div class="page-wrap">
+    <div style="height:14px;"></div>
+    <div class="card">
+      <div class="card-title">👤 Taarifa Zako Binafsi</div>
+      <div id="reg-alert"></div>
+      <div class="form-group"><label>Jina Kamili (majina matatu)</label><input type="text" class="form-input" id="reg-jina" placeholder="mfano: Amina Juma Hassan"/><div class="field-err" id="err-reg-jina">Weka majina matatu kamili</div></div>
+      <div class="form-group"><label>Namba ya Simu (ID yako)</label><input type="tel" class="form-input" id="reg-simu" placeholder="0712345678"/><div class="field-err" id="err-reg-simu">Weka namba sahihi ya simu</div></div>
+      <div class="form-group"><label>PIN (nambari 4)</label><input type="password" class="form-input" id="reg-pin" placeholder="PIN ya siri" maxlength="4" inputmode="numeric"/><div class="field-err" id="err-reg-pin">PIN lazima iwe nambari 4</div></div>
+      <div class="form-group"><label>Thibitisha PIN</label><input type="password" class="form-input" id="reg-pin2" placeholder="Rudia PIN" maxlength="4" inputmode="numeric"/><div class="field-err" id="err-reg-pin2">PIN hazilingani</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">👨‍👩‍👧‍👦 Tegemezi Wako (Hiari — unaweza kuongeza baadaye)</div>
+      <div id="reg-teg-alert"></div>
+      <div id="reg-tegemezi-form">
+        <div class="form-group"><label>Baba</label><input type="text" class="form-input" id="teg-baba" placeholder="Jina kamili la baba (hiari)"/></div>
+        <div class="form-group"><label>Mama</label><input type="text" class="form-input" id="teg-mama" placeholder="Jina kamili la mama (hiari)"/></div>
+        <div class="form-group"><label>Mke / Mume (Mwenzi)</label><input type="text" class="form-input" id="teg-mwenzi" placeholder="Jina kamili la mwenzi (hiari)"/></div>
+        <div class="form-grid">
+          <div class="form-group"><label>Mtoto 1</label><input type="text" class="form-input" id="teg-mtoto1" placeholder="Jina (hiari)"/></div>
+          <div class="form-group"><label>Mtoto 2</label><input type="text" class="form-input" id="teg-mtoto2" placeholder="Jina (hiari)"/></div>
+          <div class="form-group"><label>Mtoto 3</label><input type="text" class="form-input" id="teg-mtoto3" placeholder="Jina (hiari)"/></div>
+          <div class="form-group"><label>Mtoto 4</label><input type="text" class="form-input" id="teg-mtoto4" placeholder="Jina (hiari)"/></div>
+        </div>
+      </div>
+      <div class="alert alert-warning">⚠ Unaweza kusajili tegemezi baadaye, lakini <strong>huwezi kudai msaada bila tegemezi husika kusajiliwa kwanza.</strong></div>
+    </div>
+    <button class="btn btn-primary" onclick="doRegister()">📤 Tuma Ombi la Kujiunga</button>
+    <div style="height:10px;"></div>
+    <button class="btn btn-outline" onclick="showScreen('screen-login')">Nina akaunti → Ingia</button>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="screen" id="screen-login">
+  <div style="background:var(--primary);padding:14px 18px;display:flex;align-items:center;gap:10px;">
+    <button onclick="showScreen('screen-welcome')" style="background:none;border:none;color:white;font-size:22px;cursor:pointer;">←</button>
+    <div><p style="color:white;font-weight:700;font-size:15px;">Ingia</p></div>
+  </div>
+  <div class="page-wrap">
+    <div style="height:14px;"></div>
+    <div class="card">
+      <div class="card-title">🔑 Ingia kwenye Akaunti</div>
+      <div id="login-alert"></div>
+      <div class="form-group"><label>Namba ya Simu</label><input type="tel" class="form-input" id="login-simu" placeholder="0712345678"/></div>
+      <div class="form-group"><label>PIN</label><input type="password" class="form-input" id="login-pin" placeholder="PIN yako" maxlength="4" inputmode="numeric" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="btn btn-primary" onclick="doLogin()">Ingia</button>
+      <div style="height:8px;"></div>
+      <button class="btn btn-outline" onclick="showScreen('screen-register')">Jiandikishe</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBER DASHBOARD -->
+<div class="screen" id="screen-member">
+  <div class="topbar">
+    <div><p class="topbar-title">Ngara Yachu</p><p class="topbar-sub" id="mem-topbar-name">Karibu</p></div>
+    <div class="topbar-right"><button class="logout-btn" onclick="doLogout()">Toka</button></div>
+  </div>
+  <div style="padding:14px;padding-bottom:80px;max-width:520px;margin:0 auto;">
+    <div class="tabs">
+      <div class="tab active" id="mtab-nyumbani-btn" onclick="showMemberTab('nyumbani')">🏠 Nyumbani</div>
+      <div class="tab" id="mtab-tegemezi-btn" onclick="showMemberTab('tegemezi')">👨‍👩‍👧 Tegemezi</div>
+      <div class="tab" id="mtab-dai-btn" onclick="showMemberTab('dai')">📋 Dai</div>
+      <div class="tab" id="mtab-madai-btn" onclick="showMemberTab('madai')">📜 Historia</div>
+    </div>
+
+    <!-- NYUMBANI TAB -->
+    <div id="mtab-nyumbani">
+      <div class="account-hero">
+        <p class="account-hero-name" id="mem-jina">—</p>
+        <p class="account-hero-phone" id="mem-simu">—</p>
+        <p class="account-hero-lbl">Salio la Akaunti</p>
+        <p class="account-hero-balance" id="mem-salio">TZS 0</p>
+        <div class="account-status" id="mem-status-badge">—</div>
+      </div>
+      <div id="mem-penalty-banner" style="display:none;" class="penalty-banner">
+        <strong>⚠ Tahadhari ya Faini!</strong>
+        <span id="mem-penalty-text">Salio lako ni chini ya TZS 30,000. Tafadhali lipia haraka ili kuepuka faini ya TZS 15,000.</span>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" id="mem-madai-count">0</div><div class="stat-lbl">Madai Yaliyofanywa</div></div>
+        <div class="stat-card"><div class="stat-num" id="mem-teg-count">0</div><div class="stat-lbl">Tegemezi Waliosajiliwa</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">ℹ Sheria za Kikundi</div>
+        <p style="font-size:13px;line-height:2;color:var(--muted);">
+          • Salio la chini: <strong style="color:var(--text)">TZS 30,000/=</strong><br>
+          • Msaada wa msiba: <strong style="color:var(--text)">TZS 2,000,000/=</strong><br>
+          • Michango: <strong style="color:var(--text)">TZS 30,000/= kwa kila mwanachama</strong><br>
+          • Faini (siku 7+): <strong style="color:var(--red)">TZS 15,000/=</strong><br>
+          • Tegemezi wanaohusika: Baba, Mama, Mwenzi, Watoto 4
+        </p>
+      </div>
+    </div>
+
+    <!-- TEGEMEZI TAB -->
+    <div id="mtab-tegemezi" style="display:none;">
+      <div id="teg-alert"></div>
+      <div class="card">
+        <div class="card-title">👨‍👩‍👧‍👦 Tegemezi Waliосajiliwa</div>
+        <div id="teg-list-display"></div>
+      </div>
+      <div class="card" id="teg-add-card">
+        <div class="card-title">➕ Ongeza / Sasisha Tegemezi</div>
+        <div id="teg-add-alert"></div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Unaweza kuongeza tegemezi ambao bado hawajasajiliwa. Tegemezi aliyesajiliwa hawezi kubadilishwa.</p>
+        <div id="teg-add-form"></div>
+        <button class="btn btn-primary" id="teg-save-btn" onclick="hifadhiTegemezi()" style="margin-top:8px;">💾 Hifadhi Tegemezi</button>
+      </div>
+    </div>
+
+    <!-- DAI TAB -->
+    <div id="mtab-dai" style="display:none;">
+      <div id="dai-alert"></div>
+      <div class="card">
+        <div class="card-title">📋 Omba Msaada wa Msiba</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Jaza fomu hii ukipata msiba. Mfumo utathibitisha taarifa zako na kutuma kwa msimamizi.</p>
+        <div class="form-group">
+          <label>Tegemezi Aliyefariki</label>
+          <select class="form-select" id="dai-tegemezi">
+            <option value="">Chagua tegemezi...</option>
+          </select>
+          <div class="field-err" id="err-dai-teg">Chagua tegemezi</div>
+        </div>
+        <div class="form-group">
+          <label>Jina Kamili la Marehemu</label>
+          <input type="text" class="form-input" id="dai-jina-marehemu" placeholder="Jina kama lilivyosajiliwa"/>
+          <div class="field-err" id="err-dai-jina">Jina linahitajika</div>
+        </div>
+        <div class="form-group">
+          <label>Tarehe ya Kifo</label>
+          <input type="date" class="form-input" id="dai-tarehe"/>
+        </div>
+        <div class="form-group">
+          <label>Maelezo ya Ziada (hiari)</label>
+          <textarea class="form-input" id="dai-maelezo" rows="2" placeholder="Maelezo yoyote ya ziada..."></textarea>
+        </div>
+        <div id="dai-verify-result" style="display:none;" class="alert alert-info"></div>
+        <button class="btn btn-primary" onclick="thibitishaDai()">🔍 Thibitisha na Tuma</button>
+      </div>
+    </div>
+
+    <!-- HISTORIA TAB -->
+    <div id="mtab-madai" style="display:none;">
+      <div id="historia-madai-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="screen" id="screen-admin-login">
+  <div style="background:var(--primary-dark);padding:14px 18px;display:flex;align-items:center;gap:10px;">
+    <button onclick="showScreen('screen-welcome')" style="background:none;border:none;color:white;font-size:22px;cursor:pointer;">←</button>
+    <div><p style="color:white;font-weight:700;font-size:15px;">Msimamizi</p></div>
+  </div>
+  <div class="page-wrap">
+    <div style="height:14px;"></div>
+    <div class="card">
+      <div class="card-title">⚙ Ingia kama Msimamizi</div>
+      <div id="admin-login-alert"></div>
+      <div class="form-group"><label>Nenosiri</label><input type="password" class="form-input" id="admin-pw" onkeydown="if(event.key==='Enter')doAdminLogin()"/></div>
+      <button class="btn btn-primary" onclick="doAdminLogin()">Ingia</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="screen" id="screen-admin">
+  <div class="topbar" style="background:var(--primary-dark);">
+    <div><p class="topbar-title">Ngara Yachu</p><p class="topbar-sub">Dashibodi ya Msimamizi</p></div>
+    <div class="topbar-right"><button class="logout-btn" onclick="doAdminLogout()">Toka</button></div>
+  </div>
+  <div class="admin-wrap">
+    <div class="tabs">
+      <div class="tab active" id="atab-muhtasari-btn" onclick="showAdminTab('muhtasari')">📊 Muhtasari</div>
+      <div class="tab" id="atab-wanachama-btn" onclick="showAdminTab('wanachama')">👥 Wanachama</div>
+      <div class="tab" id="atab-madai-btn" onclick="showAdminTab('madai')">📋 Madai</div>
+      <div class="tab" id="atab-michango-btn" onclick="showAdminTab('michango')">💰 Michango</div>
+      <div class="tab" id="atab-malipo-btn" onclick="showAdminTab('malipo')">💳 Malipo</div>
+    </div>
+
+    <!-- MUHTASARI TAB -->
+    <div id="atab-muhtasari">
+      <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat-card"><div class="stat-num" id="a-total-wanachama">0</div><div class="stat-lbl">Wanachama</div></div>
+        <div class="stat-card"><div class="stat-num" id="a-madai-pending">0</div><div class="stat-lbl">Madai Yanayosubiri</div></div>
+        <div class="stat-card"><div class="stat-num" id="a-faini-count">0</div><div class="stat-lbl">Wanaohitaji Faini</div></div>
+        <div class="stat-card"><div class="stat-num" id="a-total-pool">0</div><div class="stat-lbl">Jumla Akaunti (000)</div></div>
+      </div>
+
+      <!-- PENALTY DASHBOARD -->
+      <div class="card">
+        <div class="card-title">⚠ Wanachama Wanaohitaji Kulipa (Salio Chini ya TZS 30,000)</div>
+        <div id="penalty-list"><p style="color:var(--muted);text-align:center;padding:20px;font-size:13px;">Inapakia...</p></div>
+      </div>
+
+      <!-- BROADCAST -->
+      <div class="card">
+        <div class="card-title">📢 Tuma Arifa kwa Wanachama Wote</div>
+        <div class="form-group"><textarea class="form-input" id="broadcast-msg" rows="3" placeholder="Andika ujumbe..."></textarea></div>
+        <button class="wa-btn" onclick="sendBroadcastWA()">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Tuma WhatsApp kwa Msimamizi wa Kikundi
+        </button>
+      </div>
+    </div>
+
+    <!-- WANACHAMA TAB -->
+    <div id="atab-wanachama" style="display:none;">
+      <div class="tabs" style="margin-bottom:12px;">
+        <div class="tab active" id="w-pending-btn" onclick="showWaFilter('pending')">⏳ Maombi Mapya</div>
+        <div class="tab" id="w-approved-btn" onclick="showWaFilter('approved')">✅ Wanachama</div>
+      </div>
+      <div id="wanachama-list"></div>
+    </div>
+
+    <!-- MADAI TAB -->
+    <div id="atab-madai" style="display:none;">
+      <div class="tabs" style="margin-bottom:12px;">
+        <div class="tab active" id="d-pending-btn" onclick="showDaiFilter('pending')">⏳ Yanayosubiri</div>
+        <div class="tab" id="d-approved-btn" onclick="showDaiFilter('approved')">✅ Yaliyoidhinishwa</div>
+        <div class="tab" id="d-all-btn" onclick="showDaiFilter('all')">📋 Yote</div>
+      </div>
+      <div id="madai-admin-list"></div>
+    </div>
+
+    <!-- MICHANGO TAB -->
+    <div id="atab-michango" style="display:none;">
+      <div class="card">
+        <div class="card-title">💰 Hali ya Michango kwa Madai Yaliyoidhinishwa</div>
+        <div id="michango-list"><p style="color:var(--muted);text-align:center;padding:20px;font-size:13px;">Hakuna madai yaliyoidhinishwa bado</p></div>
+      </div>
+    </div>
+
+    <!-- MALIPO TAB -->
+    <div id="atab-malipo" style="display:none;">
+      <div class="card">
+        <div class="card-title">💳 Ongeza Pesa kwenye Akaunti ya Mwanachama</div>
+        <div id="malipo-alert"></div>
+        <div class="form-group"><label>Chagua Mwanachama</label><select class="form-select" id="malipo-mwanachama"></select></div>
+        <div class="form-group"><label>Kiasi (TZS)</label><input type="number" class="form-input" id="malipo-kiasi" placeholder="30000"/></div>
+        <div class="form-group"><label>Tarehe</label><input type="date" class="form-input" id="malipo-tarehe"/></div>
+        <div class="form-group"><label>Maelezo (hiari)</label><input type="text" class="form-input" id="malipo-maelezo" placeholder="mfano: Mchango wa Januari"/></div>
+        <button class="btn btn-gold" onclick="ongezaMalipo()">💾 Hifadhi Malipo</button>
+      </div>
+      <div class="card">
+        <div class="card-title">📜 Historia ya Malipo</div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Tarehe</th><th>Mwanachama</th><th>Kiasi</th><th>Maelezo</th></tr></thead>
+          <tbody id="malipo-history"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL YA MWANACHAMA DETAILS -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-title"><span id="modal-title-txt">—</span><button class="modal-close" onclick="closeModalDirect()">✕</button></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══ CONFIG ═══
+const SB_URL='https://vkemiblurofzczjafrzj.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrZW1pYmx1cm9memN6amFmcnpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNzI3MjYsImV4cCI6MjA4OTc0ODcyNn0.awQQ6kZXkyU5_PPe4N9dIRu5rf1PiHw4ysaQp3rsH4k';
+const ADMIN_PASS='ngarayachu2026';
+const WA_ADMIN='255748863304';
+const MIN_SALIO=30000;
+const FAINI=15000;
+const MSAADA=2000000;
+const MCHANGO=30000;
+
+const H={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
+const DB={
+  async get(t,q=''){const r=await fetch(`${SB_URL}/rest/v1/${t}?${q}`,{headers:H});return r.json();},
+  async post(t,d){const r=await fetch(`${SB_URL}/rest/v1/${t}`,{method:'POST',headers:H,body:JSON.stringify(d)});return r.json();},
+  async patch(t,f,d){const r=await fetch(`${SB_URL}/rest/v1/${t}?${f}`,{method:'PATCH',headers:H,body:JSON.stringify(d)});return r.json();},
+  async del(t,f){await fetch(`${SB_URL}/rest/v1/${t}?${f}`,{method:'DELETE',headers:H});}
+};
+
+// ═══ STATE ═══
+let currentMember=null, isAdmin=false;
+let allWanachama=[], allTegemezi=[], allMadai=[], allMichango=[], allMalipo=[];
+let wanaFilter='pending', daiFilter='pending';
+
+// ═══ SCREEN ═══
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);}
+
+// ═══ HELPERS ═══
+function $(id){return document.getElementById(id);}
+function pesa(n){return 'TZS '+(n||0).toLocaleString()+'/=';}
+function leoISO(){return new Date().toISOString().slice(0,10);}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function setAlert(id,msg,type='info'){const el=$(id);if(!el)return;el.innerHTML=msg?`<div class="alert alert-${type}">${msg}</div>`:'';if(msg)el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function showErr(id,v){const el=$(id);if(el)el.classList.toggle('show',v);}
+function safuTupu(msg){return`<p style="color:var(--muted);text-align:center;padding:30px;font-size:13px;">📭 ${msg}</p>`;}
+function closeDays(tarehe){const d=new Date(tarehe);d.setDate(d.getDate()+7);const diff=Math.ceil((d-new Date())/(1000*60*60*24));return diff;}
+
+// ═══ MODAL ═══
+function openModal(title,body){$('modal-title-txt').textContent=title;$('modal-body').innerHTML=body;$('modal-bg').classList.add('open');}
+function closeModal(e){if(e.target===$('modal-bg'))closeModalDirect();}
+function closeModalDirect(){$('modal-bg').classList.remove('open');}
+
+// ═══ REGISTER ═══
+async function doRegister(){
+  const jina=$('reg-jina').value.trim();
+  const simu=$('reg-simu').value.trim();
+  const pin=$('reg-pin').value.trim();
+  const pin2=$('reg-pin2').value.trim();
+  let ok=true;
+  const words=jina.split(' ').filter(w=>w.length>0);
+  if(words.length<3){showErr('err-reg-jina',true);ok=false;}else showErr('err-reg-jina',false);
+  if(!simu||simu.length<9){showErr('err-reg-simu',true);ok=false;}else showErr('err-reg-simu',false);
+  if(pin.length!==4||isNaN(pin)){showErr('err-reg-pin',true);ok=false;}else showErr('err-reg-pin',false);
+  if(pin!==pin2){showErr('err-reg-pin2',true);ok=false;}else showErr('err-reg-pin2',false);
+  if(!ok)return;
+  setAlert('reg-alert','Inatuma ombi...','info');
+  try{
+    const existing=await DB.get('wanachama',`namba_simu=eq.${simu}`);
+    if(Array.isArray(existing)&&existing.length>0){setAlert('reg-alert','Namba hii ya simu imeshasajiliwa.','error');return;}
+    const result=await DB.post('wanachama',{jina_kamili:jina,namba_simu:simu,pin,status:'pending',salio:0});
+    if(!Array.isArray(result)||!result[0]){setAlert('reg-alert','Hitilafu. Jaribu tena.','error');return;}
+    const mid=result[0].id;
+    const tegMap=[
+      {field:'teg-baba',uhusiano:'Baba'},{field:'teg-mama',uhusiano:'Mama'},
+      {field:'teg-mwenzi',uhusiano:'Mwenzi'},{field:'teg-mtoto1',uhusiano:'Mtoto 1'},
+      {field:'teg-mtoto2',uhusiano:'Mtoto 2'},{field:'teg-mtoto3',uhusiano:'Mtoto 3'},
+      {field:'teg-mtoto4',uhusiano:'Mtoto 4'}
+    ];
+    for(const t of tegMap){
+      const v=$(t.field).value.trim();
+      if(v)await DB.post('tegemezi',{mwanachama_id:mid,uhusiano:t.uhusiano,jina_kamili:v});
+    }
+    setAlert('reg-alert',`✅ Ombi limetumwa! Subiri msimamizi akuidhinishe. Namba yako ya simu ndiyo ID yako: <strong>${simu}</strong>`,'success');
+    $('reg-jina').value='';$('reg-simu').value='';$('reg-pin').value='';$('reg-pin2').value='';
+  }catch(e){setAlert('reg-alert','Hitilafu: '+e.message,'error');}
+}
+
+// ═══ MEMBER LOGIN ═══
+async function doLogin(){
+  const simu=$('login-simu').value.trim();
+  const pin=$('login-pin').value.trim();
+  if(!simu||!pin){setAlert('login-alert','Weka namba ya simu na PIN','error');return;}
+  setAlert('login-alert','Inaingia...','info');
+  try{
+    const r=await DB.get('wanachama',`namba_simu=eq.${simu}&pin=eq.${pin}`);
+    if(!Array.isArray(r)||!r[0]){setAlert('login-alert','Namba ya simu au PIN si sahihi.','error');return;}
+    const m=r[0];
+    if(m.status==='pending'){setAlert('login-alert','⏳ Akaunti yako bado haijakubaliwa. Subiri msimamizi.','warning');return;}
+    if(m.status==='rejected'){setAlert('login-alert','❌ Ombi lako limekataliwa. Wasiliana na msimamizi.','error');return;}
+    currentMember=m;
+    setAlert('login-alert','','info');
+    await loadMemberDashboard();
+    showScreen('screen-member');
+  }catch(e){setAlert('login-alert','Hitilafu: '+e.message,'error');}
+}
+function doLogout(){currentMember=null;showScreen('screen-welcome');}
+
+// ═══ MEMBER DASHBOARD ═══
+async function loadMemberDashboard(){
+  $('mem-topbar-name').textContent='Habari, '+currentMember.jina_kamili.split(' ')[0]+'!';
+  const fresh=await DB.get('wanachama',`id=eq.${currentMember.id}`);
+  if(Array.isArray(fresh)&&fresh[0])currentMember=fresh[0];
+  $('mem-jina').textContent=currentMember.jina_kamili;
+  $('mem-simu').textContent='📱 '+currentMember.namba_simu;
+  $('mem-salio').textContent=pesa(currentMember.salio);
+  const active=currentMember.salio>=MIN_SALIO;
+  const badge=$('mem-status-badge');
+  badge.className='account-status '+(active?'status-active':'status-inactive');
+  badge.textContent=active?'✓ Akaunti Hai':'⚠ Akaunti Kikamilifu';
+  const penBanner=$('mem-penalty-banner');
+  if(!active){penBanner.style.display='block';}else{penBanner.style.display='none';}
+  const teg=await DB.get('tegemezi',`mwanachama_id=eq.${currentMember.id}`);
+  const myTeg=Array.isArray(teg)?teg:[];
+  const madai=await DB.get('madai',`mwanachama_id=eq.${currentMember.id}&order=created_at.desc`);
+  const myMadai=Array.isArray(madai)?madai:[];
+  $('mem-teg-count').textContent=myTeg.length;
+  $('mem-madai-count').textContent=myMadai.length;
+  await loadTegeziTab(myTeg);
+  await loadDaiTab(myTeg);
+  loadHistoriaMadai(myMadai);
+  $('malipo-tarehe').value=leoISO();
+}
+
+// ═══ TEGEMEZI TAB ═══
+async function loadTegeziTab(myTeg){
+  const roles=['Baba','Mama','Mwenzi','Mtoto 1','Mtoto 2','Mtoto 3','Mtoto 4'];
+  const totalUsed=myTeg.length;
+  const canAdd=totalUsed<7;
+  let displayHTML='';
+  roles.forEach(r=>{
+    const found=myTeg.find(t=>t.uhusiano===r);
+    displayHTML+=`<div class="teg-item ${found?'filled':'empty'}">
+      <div class="teg-role">${r}</div>
+      ${found?`<div class="teg-name">✓ ${found.jina_kamili}</div>`:'<div class="teg-empty">Bado hajasajiliwa</div>'}
+    </div>`;
+  });
+  $('teg-list-display').innerHTML=`<div class="tegemezi-grid">${displayHTML}</div>`;
+  if(!canAdd){
+    $('teg-add-card').innerHTML='<div class="card-title">✅ Tegemezi Wote Wamesajiliwa</div><p style="color:var(--muted);font-size:13px;">Umefika kikomo cha tegemezi 7.</p>';
+    return;
+  }
+  const remaining=roles.filter(r=>!myTeg.find(t=>t.uhusiano===r));
+  let formHTML='';
+  remaining.forEach(r=>{
+    formHTML+=`<div class="form-group"><label>${r}</label><input type="text" class="form-input" id="new-teg-${r.replace(' ','-')}" placeholder="Jina kamili (hiari)"/></div>`;
+  });
+  $('teg-add-form').innerHTML=formHTML;
+}
+
+async function hifadhiTegemezi(){
+  const roles=['Baba','Mama','Mwenzi','Mtoto 1','Mtoto 2','Mtoto 3','Mtoto 4'];
+  const existing=await DB.get('tegemezi',`mwanachama_id=eq.${currentMember.id}`);
+  const myTeg=Array.isArray(existing)?existing:[];
+  const remaining=roles.filter(r=>!myTeg.find(t=>t.uhusiano===r));
+  let added=0;
+  for(const r of remaining){
+    const el=$('new-teg-'+r.replace(' ','-'));
+    if(el&&el.value.trim()){
+      await DB.post('tegemezi',{mwanachama_id:currentMember.id,uhusiano:r,jina_kamili:el.value.trim()});
+      added++;
+    }
+  }
+  if(added>0){toast(`✅ Tegemezi ${added} wameongezwa!`);await loadMemberDashboard();}
+  else{setAlert('teg-add-alert','Hakuna taarifa mpya zilizowekwa.','warning');}
+}
+
+// ═══ DAI TAB ═══
+async function loadDaiTab(myTeg){
+  const sel=$('dai-tegemezi');
+  sel.innerHTML='<option value="">Chagua tegemezi...</option>';
+  myTeg.forEach(t=>{
+    const o=document.createElement('option');
+    o.value=t.id;
+    o.dataset.jina=t.jina_kamili;
+    o.dataset.uhusiano=t.uhusiano;
+    o.textContent=`${t.uhusiano} — ${t.jina_kamili}`;
+    sel.appendChild(o);
+  });
+  $('dai-tarehe').value=leoISO();
+}
+
+async function thibitishaDai(){
+  const tegId=$('dai-tegemezi').value;
+  const jinaInput=$('dai-jina-marehemu').value.trim();
+  const tarehe=$('dai-tarehe').value;
+  const maelezo=$('dai-maelezo').value.trim();
+  let ok=true;
+  if(!tegId){showErr('err-dai-teg',true);ok=false;}else showErr('err-dai-teg',false);
+  if(!jinaInput){showErr('err-dai-jina',true);ok=false;}else showErr('err-dai-jina',false);
+  if(!ok)return;
+  if(currentMember.salio<MIN_SALIO){
+    setAlert('dai-alert','❌ Akaunti yako haina nguvu. Unahitaji salio la angalau TZS 30,000 ili kudai msaada. Wasiliana na msimamizi uongeze salio.','error');
+    return;
+  }
+  const sel=$('dai-tegemezi');
+  const opt=sel.options[sel.selectedIndex];
+  const jinaIliyosajiliwa=opt.dataset.jina;
+  const uhusiano=opt.dataset.uhusiano;
+  const jinaInputClean=jinaInput.toLowerCase().replace(/\s+/g,' ').trim();
+  const jinaKwenyeDB=jinaIliyosajiliwa.toLowerCase().replace(/\s+/g,' ').trim();
+  const resultDiv=$('dai-verify-result');
+  if(jinaInputClean!==jinaKwenyeDB){
+    resultDiv.style.display='block';
+    resultDiv.className='alert alert-error';
+    resultDiv.textContent=`❌ Jina hazilingani! Jina lililосajiliwa ni "${jinaIliyosajiliwa}". Tafadhali andika jina kama lilivyosajiliwa.`;
+    return;
+  }
+  resultDiv.style.display='block';
+  resultDiv.className='alert alert-info';
+  resultDiv.textContent='✅ Taarifa zimethibitishwa! Inatuma dai kwa msimamizi...';
+  try{
+    const existing=await DB.get('madai',`mwanachama_id=eq.${currentMember.id}&uhusiano=eq.${uhusiano}&status=in.(pending,approved)`);
+    if(Array.isArray(existing)&&existing.length>0){
+      resultDiv.className='alert alert-error';
+      resultDiv.textContent='❌ Tayari una dai la '+uhusiano+' linalosubiri au lililoidhinishwa.';
+      return;
+    }
+    const result=await DB.post('madai',{mwanachama_id:currentMember.id,jina_marehemu:jinaIliyosajiliwa,uhusiano,tarehe_kifo:tarehe,maelezo,status:'pending',tegemezi_imethibitishwa:true,kiasi:MSAADA});
+    if(Array.isArray(result)&&result[0]){
+      resultDiv.className='alert alert-success';
+      resultDiv.textContent='✅ Dai limetumwa kwa msimamizi! Utaarifiwa ukipata jibu.';
+      const wa=encodeURIComponent(`🆘 NGARA YACHU — DAI JIPYA\n\nMwanachama: ${currentMember.jina_kamili}\nSimu: ${currentMember.namba_simu}\nTegemezi: ${uhusiano} — ${jinaIliyosajiliwa}\nTarehe ya Kifo: ${tarehe}\nKiasi: ${pesa(MSAADA)}\n\nTafadhali ingia mfumo kuidhinisha dai hili.`);
+      window.open(`https://wa.me/${WA_ADMIN}?text=${wa}`,'_blank');
+      $('dai-tegemezi').value='';$('dai-jina-marehemu').value='';$('dai-maelezo').value='';
+    }
+  }catch(e){resultDiv.className='alert alert-error';resultDiv.textContent='Hitilafu: '+e.message;}
+}
+
+// ═══ HISTORIA ═══
+function loadHistoriaMadai(myMadai){
+  if(!myMadai.length){$('historia-madai-list').innerHTML=safuTupu('Bado hujafanya dai lolote.');return;}
+  $('historia-madai-list').innerHTML=myMadai.map(d=>`
+    <div class="dai-card">
+      <div class="dai-card-header">
+        <div><div class="dai-title">${d.uhusiano} — ${d.jina_marehemu}</div><div class="dai-sub">Tarehe ya kifo: ${d.tarehe_kifo}</div></div>
+        <span class="badge badge-${d.status}">${d.status==='pending'?'⏳ Inasubiri':d.status==='approved'?'✅ Imeidhinishwa':'❌ Imekataliwa'}</span>
+      </div>
+      <div class="dai-details">
+        <div class="dai-detail-item"><div class="dai-detail-lbl">Kiasi</div><div class="dai-detail-val">${pesa(d.kiasi)}</div></div>
+        <div class="dai-detail-item"><div class="dai-detail-lbl">Tarehe ya Dai</div><div class="dai-detail-val">${new Date(d.created_at).toLocaleDateString('sw-TZ')}</div></div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══ MEMBER TABS ═══
+function showMemberTab(tab){
+  ['nyumbani','tegemezi','dai','madai'].forEach(t=>{
+    $('mtab-'+t).style.display=t===tab?'block':'none';
+    $('mtab-'+t+'-btn').classList.toggle('active',t===tab);
+  });
+}
+
+// ═══ ADMIN LOGIN ═══
+function doAdminLogin(){
+  if($('admin-pw').value===ADMIN_PASS){showScreen('screen-admin');loadAdminDashboard();}
+  else{setAlert('admin-login-alert','Nenosiri si sahihi.','error');}
+}
+function doAdminLogout(){isAdmin=false;showScreen('screen-welcome');}
+
+// ═══ ADMIN DASHBOARD ═══
+async function loadAdminDashboard(){
+  const [w,t,d,m,p]=await Promise.all([
+    DB.get('wanachama','order=created_at.desc'),
+    DB.get('tegemezi',''),
+    DB.get('madai','order=created_at.desc'),
+    DB.get('michango',''),
+    DB.get('malipo','order=created_at.desc')
+  ]);
+  allWanachama=Array.isArray(w)?w:[];
+  allTegemezi=Array.isArray(t)?t:[];
+  allMadai=Array.isArray(d)?d:[];
+  allMichango=Array.isArray(m)?m:[];
+  allMalipo=Array.isArray(p)?p:[];
+  const approved=allWanachama.filter(x=>x.status==='approved');
+  const pendingMadai=allMadai.filter(x=>x.status==='pending');
+  const fainiWanachama=approved.filter(x=>x.salio<MIN_SALIO);
+  const totalPool=approved.reduce((a,b)=>a+b.salio,0);
+  $('a-total-wanachama').textContent=approved.length;
+  $('a-madai-pending').textContent=pendingMadai.length;
+  $('a-faini-count').textContent=fainiWanachama.length;
+  $('a-total-pool').textContent=(totalPool/1000).toLocaleString();
+  renderPenaltyDashboard(fainiWanachama);
+  renderWanachamaList();
+  renderMadaiAdmin();
+  renderMichango();
+  renderMalipoHistory();
+  jaziMalipoSelect();
+  $('malipo-tarehe').value=leoISO();
+}
+
+function renderPenaltyDashboard(faini){
+  if(!faini.length){$('penalty-list').innerHTML='<div class="alert alert-success">✅ Wanachama wote wana salio la kutosha (TZS 30,000+)</div>';return;}
+  $('penalty-list').innerHTML=faini.map(m=>{
+    const upungufu=MIN_SALIO-m.salio;
+    return`<div class="member-row">
+      <div class="member-avatar" style="background:var(--red);">${m.jina_kamili.charAt(0)}</div>
+      <div class="member-info">
+        <p class="member-name">${m.jina_kamili}</p>
+        <p class="member-phone">📱 ${m.namba_simu} · Salio: <strong style="color:var(--red)">${pesa(m.salio)}</strong> · Upungufu: ${pesa(upungufu)}</p>
+      </div>
+      <div class="member-actions">
+        <button class="btn btn-sm btn-red" onclick="tekelezaFaini('${m.id}','${m.jina_kamili}')">Faini</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function tekelezaFaini(id,jina){
+  if(!confirm(`Tekeleza faini ya TZS 15,000 kwa ${jina}?`))return;
+  const m=allWanachama.find(x=>x.id===id);
+  if(!m)return;
+  const newSalio=m.salio-FAINI;
+  await DB.patch('wanachama',`id=eq.${id}`,{salio:newSalio});
+  await DB.post('malipo',{mwanachama_id:id,kiasi:-FAINI,aina:'faini',maelezo:'Faini ya kuchelewa kulipa',tarehe:leoISO()});
+  toast(`Faini ya ${pesa(FAINI)} imetolewa kwa ${jina}`);
+  await loadAdminDashboard();
+}
+
+// ═══ WANACHAMA ═══
+function showWaFilter(f){
+  wanaFilter=f;
+  ['pending','approved'].forEach(x=>$('w-'+x+'-btn').classList.toggle('active',x===f));
+  renderWanachamaList();
+}
+
+function renderWanachamaList(){
+  const list=allWanachama.filter(m=>m.status===wanaFilter);
+  if(!list.length){$('wanachama-list').innerHTML=safuTupu(wanaFilter==='pending'?'Hakuna maombi mapya':'Hakuna wanachama walioidhinishwa');return;}
+  $('wanachama-list').innerHTML=list.map(m=>{
+    const myTeg=allTegemezi.filter(t=>t.mwanachama_id===m.id);
+    return`<div class="member-row">
+      <div class="member-avatar">${m.jina_kamili.charAt(0)}</div>
+      <div class="member-info">
+        <p class="member-name">${m.jina_kamili}</p>
+        <p class="member-phone">📱 ${m.namba_simu} · Tegemezi ${myTeg.length} · ${pesa(m.salio)}</p>
+        <span class="badge badge-${m.status}" style="margin-top:4px;">${m.status==='pending'?'⏳ Inasubiri':m.status==='approved'?'✅ Mwanachama':'❌ Imekataliwa'}</span>
+      </div>
+      <div class="member-actions">
+        <button class="btn btn-sm btn-primary" onclick="angaliaMwanachama('${m.id}')">👁</button>
+        ${m.status==='pending'?`<button class="btn btn-sm btn-green" onclick="idhinishaMwanachama('${m.id}')">✅</button><button class="btn btn-sm btn-red" onclick="kataaMwanachama('${m.id}')">❌</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function angaliaMwanachama(id){
+  const m=allWanachama.find(x=>x.id===id);
+  const teg=allTegemezi.filter(t=>t.mwanachama_id===id);
+  if(!m)return;
+  const tegHTML=teg.length?teg.map(t=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;"><span style="color:var(--muted)">${t.uhusiano}</span><strong>${t.jina_kamili}</strong></div>`).join(''):'<p style="color:var(--muted);font-size:13px;">Hakuna tegemezi</p>';
+  openModal(m.jina_kamili,`
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">📱 ${m.namba_simu} · Salio: <strong>${pesa(m.salio)}</strong></p>
+    <p style="font-weight:600;font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;">Tegemezi</p>
+    ${tegHTML}`);
+}
+
+async function idhinishaMwanachama(id){
+  if(!confirm('Idhinisha mwanachama huyu?'))return;
+  await DB.patch('wanachama',`id=eq.${id}`,{status:'approved'});
+  toast('✅ Mwanachama ameidhinishwa!');
+  await loadAdminDashboard();
+}
+
+async function kataaMwanachama(id){
+  if(!confirm('Kataa ombi hili?'))return;
+  await DB.patch('wanachama',`id=eq.${id}`,{status:'rejected'});
+  toast('Ombi limekataliwa');
+  await loadAdminDashboard();
+}
+
+// ═══ MADAI ADMIN ═══
+function showDaiFilter(f){
+  daiFilter=f;
+  ['pending','approved','all'].forEach(x=>$('d-'+x+'-btn').classList.toggle('active',x===f));
+  renderMadaiAdmin();
+}
+
+function renderMadaiAdmin(){
+  const list=daiFilter==='all'?allMadai:allMadai.filter(d=>d.status===daiFilter);
+  if(!list.length){$('madai-admin-list').innerHTML=safuTupu('Hakuna madai');return;}
+  $('madai-admin-list').innerHTML=list.map(d=>{
+    const m=allWanachama.find(x=>x.id===d.mwanachama_id)||{};
+    return`<div class="dai-card">
+      <div class="dai-card-header">
+        <div>
+          <div class="dai-title">${m.jina_kamili||'—'} — ${d.uhusiano}</div>
+          <div class="dai-sub">📱 ${m.namba_simu||'—'} · Marehemu: ${d.jina_marehemu}</div>
+          <div class="dai-sub">Tarehe ya kifo: ${d.tarehe_kifo} · Dai: ${new Date(d.created_at).toLocaleDateString('sw-TZ')}</div>
+        </div>
+        <span class="badge badge-${d.status}">${d.status==='pending'?'⏳':d.status==='approved'?'✅':'❌'}</span>
+      </div>
+      ${d.maelezo?`<p style="font-size:12px;color:var(--muted);margin:6px 0;">${d.maelezo}</p>`:''}
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        ${d.status==='pending'?`
+          <button class="btn btn-sm btn-green" onclick="idhinishaDai('${d.id}','${d.mwanachama_id}','${m.jina_kamili||''}','${m.namba_simu||''}','${d.uhusiano}','${d.jina_marehemu}')">✅ Idhinisha</button>
+          <button class="btn btn-sm btn-red" onclick="kataaDai('${d.id}')">❌ Kataa</button>`:''}
+        ${d.status==='approved'?`<button class="btn btn-sm" style="background:var(--green-light);color:var(--green);" onclick="angaliaMichango('${d.id}')">💰 Angalia Michango</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function idhinishaDai(daiId,memId,memJina,memSimu,uhusiano,jinaMarehemu){
+  if(!confirm(`Idhinisha dai la ${memJina}?`))return;
+  await DB.patch('madai',`id=eq.${daiId}`,{status:'approved',tarehe_idhinisha:new Date().toISOString()});
+  const approvedMembers=allWanachama.filter(x=>x.status==='approved');
+  const leo=leoISO();
+  const mwishowe=new Date();mwishowe.setDate(mwishowe.getDate()+7);
+  const mwishoISO=mwishowe.toISOString().slice(0,10);
+  for(const m of approvedMembers){
+    await DB.post('michango',{dai_id:daiId,mwanachama_id:m.id,kiasi:MCHANGO,imelipwa:false,tarehe_mwisho:mwishoISO,faini:0});
+    await DB.patch('wanachama',`id=eq.${m.id}`,{salio:Math.max(0,m.salio-MCHANGO),jumla_michango:m.jumla_michango+MCHANGO});
+  }
+  await DB.patch('wanachama',`id=eq.${memId}`,{idadi_madai:allWanachama.find(x=>x.id===memId)?.idadi_madai+1||1});
+  const wa=encodeURIComponent(`✅ NGARA YACHU — DAI LIMEIDHINISHWA\n\nMwanachama: ${memJina}\nSimu: ${memSimu}\nTegemezi: ${uhusiano} — ${jinaMarehemu}\nKiasi: ${pesa(MSAADA)}\n\nMichango ya TZS 30,000 imetolewa kwa wanachama wote ${approvedMembers.length}.\n\nTafadhali wasiliana na msimamizi kukusanya pesa yako.\n— Ngara Yachu`);
+  window.open(`https://wa.me/${memSimu.replace(/^0/,'255')}?text=${wa}`,'_blank');
+  toast('✅ Dai limeidhinishwa! Michango imetolewa.');
+  await loadAdminDashboard();
+}
+
+async function kataaDai(id){
+  if(!confirm('Kataa dai hili?'))return;
+  await DB.patch('madai',`id=eq.${id}`,{status:'rejected'});
+  toast('Dai limekataliwa');
+  await loadAdminDashboard();
+}
+
+function angaliaMichango(daiId){
+  const mich=allMichango.filter(m=>m.dai_id===daiId);
+  if(!mich.length){openModal('Michango','<p style="color:var(--muted)">Hakuna michango bado</p>');return;}
+  const rows=mich.map(m=>{
+    const mem=allWanachama.find(x=>x.id===m.mwanachama_id)||{};
+    return`<tr><td>${mem.jina_kamili||'—'}</td><td>${pesa(m.kiasi)}</td><td><span class="badge ${m.imelipwa?'badge-approved':'badge-pending'}">${m.imelipwa?'✅ Amelipa':'⏳ Inasubiri'}</span></td></tr>`;
+  }).join('');
+  openModal('Michango ya Dai',`<div class="table-wrap"><table><thead><tr><th>Mwanachama</th><th>Kiasi</th><th>Hali</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+}
+
+// ═══ MICHANGO ═══
+function renderMichango(){
+  const approved=allMadai.filter(d=>d.status==='approved');
+  if(!approved.length){$('michango-list').innerHTML=safuTupu('Hakuna madai yaliyoidhinishwa');return;}
+  let html='';
+  approved.forEach(d=>{
+    const mem=allWanachama.find(x=>x.id===d.mwanachama_id)||{};
+    const mich=allMichango.filter(m=>m.dai_id===d.id);
+    const waliolipa=mich.filter(m=>m.imelipwa).length;
+    html+=`<div style="padding:12px 0;border-bottom:1px solid var(--border);">
+      <p style="font-weight:600;">${mem.jina_kamili||'—'} — ${d.uhusiano} (${d.jina_marehemu})</p>
+      <p style="font-size:12px;color:var(--muted);margin:4px 0;">Waliolipa: ${waliolipa}/${mich.length} · Kiasi kinachohitajika: ${pesa(MSAADA)}</p>
+      <div style="height:6px;background:var(--border);border-radius:3px;margin-top:6px;"><div style="height:100%;background:var(--green);border-radius:3px;width:${mich.length?Math.round(waliolipa/mich.length*100):0}%"></div></div>
+    </div>`;
+  });
+  $('michango-list').innerHTML=html;
+}
+
+// ═══ MALIPO ═══
+function jaziMalipoSelect(){
+  const sel=$('malipo-mwanachama');
+  sel.innerHTML='<option value="">Chagua mwanachama...</option>';
+  allWanachama.filter(m=>m.status==='approved').forEach(m=>{
+    const o=document.createElement('option');
+    o.value=m.id;o.textContent=`${m.jina_kamili} (${pesa(m.salio)})`;
+    sel.appendChild(o);
+  });
+}
+
+async function ongezaMalipo(){
+  const mid=$('malipo-mwanachama').value;
+  const kiasi=parseInt($('malipo-kiasi').value);
+  const tarehe=$('malipo-tarehe').value;
+  const maelezo=$('malipo-maelezo').value.trim();
+  if(!mid){setAlert('malipo-alert','Chagua mwanachama','error');return;}
+  if(!kiasi||kiasi<1){setAlert('malipo-alert','Weka kiasi sahihi','error');return;}
+  const m=allWanachama.find(x=>x.id===mid);
+  if(!m)return;
+  await DB.post('malipo',{mwanachama_id:mid,kiasi,aina:'amana',maelezo,tarehe});
+  await DB.patch('wanachama',`id=eq.${mid}`,{salio:m.salio+kiasi});
+  setAlert('malipo-alert',`✅ ${pesa(kiasi)} imeongezwa kwa ${m.jina_kamili}!`,'success');
+  $('malipo-kiasi').value='';$('malipo-maelezo').value='';
+  await loadAdminDashboard();
+}
+
+function renderMalipoHistory(){
+  if(!allMalipo.length){$('malipo-history').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px;">Hakuna malipo bado</td></tr>';return;}
+  $('malipo-history').innerHTML=allMalipo.slice(0,50).map(p=>{
+    const m=allWanachama.find(x=>x.id===p.mwanachama_id)||{};
+    return`<tr><td>${p.tarehe}</td><td>${m.jina_kamili||'—'}</td><td style="color:${p.kiasi>0?'var(--green)':'var(--red)'}"><strong>${p.kiasi>0?'+':''}${pesa(p.kiasi)}</strong></td><td>${p.maelezo||'—'}</td></tr>`;
+  }).join('');
+}
+
+// ═══ ADMIN TABS ═══
+function showAdminTab(tab){
+  ['muhtasari','wanachama','madai','michango','malipo'].forEach(t=>{
+    const el=$('atab-'+t);if(el)el.style.display=t===tab?'block':'none';
+    const btn=$('atab-'+t+'-btn');if(btn)btn.classList.toggle('active',t===tab);
+  });
+}
+
+// ═══ BROADCAST ═══
+function sendBroadcastWA(){
+  const msg=$('broadcast-msg').value.trim();
+  if(!msg){toast('Andika ujumbe kwanza');return;}
+  const wa=encodeURIComponent(`📢 NGARA YACHU:\n\n${msg}\n\n— Msimamizi`);
+  window.open(`https://wa.me/${WA_ADMIN}?text=${wa}`,'_blank');
+}
+
+// ═══ INIT ═══
+showScreen('screen-welcome');
+</script>
+</body>
+</html>
